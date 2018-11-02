@@ -53,83 +53,65 @@ const float deviation = 0;
 
 const float standard = 1;
 
-
+//获取绝对值
 float get_abs( float a )
 {
 	if ( a < 0 )
 		return(-a);
-
 	return(a);
 }
-
-
-void init_k( int & k1, int & k2 )
-{
-	k1 = 0;
-
-	k2 = 0;
-}
-
 
 bool judge_normal( float k1, float k2, float deviation, float standard )
 {
 	if ( get_abs( k1 ) > standard && get_abs( k2 ) > standard )
-
-		return( (get_abs( get_abs( k1 ) - get_abs( k2 ) ) < deviation) ? true : false);
-
+		return ( (get_abs( get_abs( k1 ) - get_abs( k2 ) ) < deviation) ? true : false);
 	else{
 		return(false);
 	}
 }
 
-
+//向右转多少度
 void turnToRight( int angle )
 {
 	turnTo( angle );
-
 	delay( 1000 );
-
 	turnTo( 0 );
 }
 
-
+//向左转多少度
 void turnToLeft( int angle )
 {
 	turnTo( -angle );
-
 	delay( 1000 );
-
 	turnTo( 0 );
 }
 
-
+//前进的封装方法
 void forward( int speed )
 {
 	controlLeft( FORWARD, speed );
-
 	controlRight( FORWARD, speed );
 }
 
 
-void special_handle( float k1, float k2 )
-{
-	float positive_k, negative_k;
-
-	if ( k1 > 0 )
-	{
-		positive_k = k1;
-
-		negative_k = k2;
-	}else{
-		positive_k = k2;
-
-		negative_k = k1;
-	}
-}
+//void special_handle( float k1, float k2 )
+//{
+//	float positive_k, negative_k;
+//
+//	if ( k1 > 0 )
+//	{
+//		positive_k = k1;
+//
+//		negative_k = k2;
+//	}else{
+//		positive_k = k2;
+//
+//		negative_k = k1;
+//	}
+//}
 
 
 ///* 简单处理，哪边斜率大就向另一边转 */
-
 void simple_handle( float k1, float k2 )
 {
 	int positive_k, negative_k;
