@@ -128,12 +128,12 @@ int main()
 		Rect roi(0,image.rows/3,image.cols,image.rows/3);
 		Mat imgROI=image(roi);
 
-		cvtColor(imgROI,grey,CV_RGB2GRAY);
-		GaussianBlur(grey,blur,Size(3,3),0);
-		medianBlur(blur,smooth,3);
-		morphologyEx(smooth, close, CV_MOP_CLOSE, element);
-		morphologyEx(close, open, CV_MOP_OPEN, element);
-		threshold(open, binary, THRESHOLD , 255, THRESH_BINARY_INV);
+//		cvtColor(imgROI,grey,CV_RGB2GRAY);
+//		GaussianBlur(grey,blur,Size(3,3),0);
+//		medianBlur(blur,smooth,3);
+//		morphologyEx(smooth, close, CV_MOP_CLOSE, element);
+//		morphologyEx(close, open, CV_MOP_OPEN, element);
+//		threshold(open, binary, THRESHOLD , 255, THRESH_BINARY_INV);
 
 		//Canny algorithm
 		Mat contours;
@@ -151,6 +151,9 @@ int main()
 		float maxRad=-2*PI;
 		float minRad=2*PI;
 		//Draw the lines and judge the slope
+		vector<float> linesLeft;
+		vector<float> linesRight;
+
 		for(vector<Vec2f>::const_iterator it=lines.begin();it!=lines.end();++it)
 		{
 			float rho=(*it)[0];			//First element is distance rho
@@ -179,14 +182,46 @@ int main()
 
 			float k = -cot(theta);
 
+			if(k>0){
+				linesLeft.push_back(k);
+			} else if(k<0){
+				linesRight.push_back(k)
+			}
+
 			#ifdef _DEBUG
 			clog<<"Line: ("<<rho<<","<<theta<<")\n";
 			#endif
 		}
 
+		float linek[2] = {0};
+
+		float sumLefft = 0;
+		float sumRight = 0;
+		for (int i = 0; i<linesLeft.size(); ++i)
+		{
+			sumLefft+= linesLeft[i];
+		}
+
+		for (int i = 0; i<linesRight.size(); ++i)
+		{
+			sumRight+= linesRight[i];
+		}
+
+		if(linesLeft.size()!=0){
+			linek[0] = sumLefft/linesLeft.size();
+		} else{
+			linek[0] = sumLefft;
+		}
+
+		if(linesRight.size()!=0){
+			linek[1] = sumRight/linesRight.size()
+		} else{
+			linek[1] = sumRight;
+		}
 		//加在这里
 		//
-		float linek[2];
+
+
         run(linek[0],linek[1]);
 		#ifdef _DEBUG
 		stringstream overlayedText;
