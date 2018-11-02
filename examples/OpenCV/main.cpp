@@ -184,6 +184,8 @@ int main()
 			#endif
 		}
 
+		//加在这里
+		//
 		float linek[2];
         run(linek[0],linek[1]);
 		#ifdef _DEBUG
