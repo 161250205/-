@@ -247,9 +247,9 @@ int main()
 
 
 
-		vector<float> linesLeft;
-
-		vector<float> linesRight;
+//		vector<float> linesLeft;
+//
+//		vector<float> linesRight;
 
 
 		for ( vector<Vec2f>::const_iterator it = lines.begin(); it != lines.end(); ++it )
@@ -287,15 +287,15 @@ int main()
 				line( result, pt1, pt2, Scalar( 0, 255, 255 ), 3, CV_AA );
                 #endif
 
-				float k = -1 / tan( theta );
-
-				if ( k > 0 )
-				{
-					linesLeft.push_back( k );
-				} else if ( k < 0 )
-				{
-					linesRight.push_back( k );
-				}
+//				float k = -1 / tan( theta );
+//
+//				if ( k > 0 )
+//				{
+//					linesLeft.push_back( k );
+//				} else if ( k < 0 )
+//				{
+//					linesRight.push_back( k );
+//				}
 			}
 
 
@@ -311,42 +311,42 @@ int main()
 		float linek[2] = { 0 };
 
 
-		float sumLefft = 0;
+//		float sumLefft = 0;
+//
+//		float sumRight = 0;
+//
+//		for ( int i = 0; i < linesLeft.size(); ++i )
+//
+//		{
+//			sumLefft += linesLeft[i];
+//		}
+//
+//
+//		for ( int i = 0; i < linesRight.size(); ++i )
+//
+//		{
+//			sumRight += linesRight[i];
+//		}
+//
+//
+//		if ( linesLeft.size() != 0 )
+//		{
+//			linek[0] = sumLefft / linesLeft.size();
+//		} else{
+//			linek[0] = sumLefft;
+//		}
+//
+//
+//		if ( linesRight.size() != 0 )
+//		{
+//			linek[1] = sumRight / linesRight.size();
+//		} else{
+//			linek[1] = sumRight;
+//		}
 
-		float sumRight = 0;
-
-		for ( int i = 0; i < linesLeft.size(); ++i )
-
-		{
-			sumLefft += linesLeft[i];
-		}
 
 
-		for ( int i = 0; i < linesRight.size(); ++i )
-
-		{
-			sumRight += linesRight[i];
-		}
-
-
-		if ( linesLeft.size() != 0 )
-		{
-			linek[0] = sumLefft / linesLeft.size();
-		} else{
-			linek[0] = sumLefft;
-		}
-
-
-		if ( linesRight.size() != 0 )
-		{
-			linek[1] = sumRight / linesRight.size();
-		} else{
-			linek[1] = sumRight;
-		}
-
-
-
-		run( linek[0], linek[1] );
+		run( 0, 0 );
 
 		#ifdef _DEBUG
 
