@@ -44,14 +44,14 @@ const int CANNY_UPPER_BOUND = 250;
 const int HOUGH_THRESHOLD = 150;
 
 
-const int high_speed = 30;      /* 正常情况下快速直行 */
+const int high_speed = 30;
 
-const int low_speed = 15;       /* 特殊情况下缓慢前行（比如需要转弯的时候或者线的识别出现了短暂bug) */
+const int low_speed = 15;
 
 
-const float deviation = 0;      /* 可以容忍的斜率差（根据实际情况定） */
+const float deviation = 0;
 
-const float standard = 1;       /* 斜率标准，只有当斜率绝对值大于标准才可以与误差比较（当斜率较小的时候，误差普遍较小，没有比较性） */
+const float standard = 1;
 
 
 float get_abs( float a )
@@ -128,13 +128,13 @@ void special_handle( float k1, float k2 )
 }
 
 
-/* 简单处理，哪边斜率大就向另一边转 */
+///* 简单处理，哪边斜率大就向另一边转 */
 
 void simple_handle( float k1, float k2 )
 {
 	int positive_k, negative_k;
 
-	int angle = 20; /* 旋转角度，默认20 */
+	int angle = 20;
 
 	if ( k1 > 0 )
 	{
@@ -149,9 +149,9 @@ void simple_handle( float k1, float k2 )
 
 	if ( positive_k > negative_k )
 	{
-		turnToRight( angle );   /* 右转 */
+		turnToRight( angle );
 	}else{
-		turnToLeft( angle );    /* 左转 */
+		turnToLeft( angle );
 	}
 }
 
@@ -160,15 +160,14 @@ void run( float k1, float k2 )
 {
 	if ( judge_normal( k1, k2, deviation, standard ) )
 	{
-		/* 是正常状态则快速前行 */
+
 
 		forward( high_speed );
 	}else{
-		/* 特殊状态则减速前行 */
+
 
 		forward( low_speed );
 
-		/* 特殊情况对舵机调整进行转弯 */
 
 		simple_handle( k1, k2 );
 	}
@@ -183,7 +182,6 @@ int main()
 	VideoCapture capture( CAM_PATH );
 
 
-	/* If this fails, try to open as a video camera, through the use of an integer param */
 
 	if ( !capture.isOpened() )
 
@@ -192,9 +190,9 @@ int main()
 	}
 
 
-	double dWidth = capture.get( CV_CAP_PROP_FRAME_WIDTH );         /* the width of frames of the video */
+	double dWidth = capture.get( CV_CAP_PROP_FRAME_WIDTH );
 
-	double dHeight = capture.get( CV_CAP_PROP_FRAME_HEIGHT );       /* the height of frames of the video */
+	double dHeight = capture.get( CV_CAP_PROP_FRAME_HEIGHT );
 
 	clog << "Frame Size: " << dWidth << "x" << dHeight << endl;
 
@@ -211,7 +209,6 @@ int main()
 			break;
 
 
-		/* Set the ROI for the image */
 
 		Rect roi( 0, image.rows / 3, image.cols, image.rows / 3 );
 
@@ -219,7 +216,7 @@ int main()
 		Mat imgROI = image( roi );
 
 
-		/* Canny algorithm */
+
 
 		Mat contours;
 
@@ -248,7 +245,7 @@ int main()
 
 		float minRad = 2 * PI;
 
-		/* Draw the lines and judge the slope */
+
 
 		vector<float> linesLeft;
 
@@ -258,17 +255,17 @@ int main()
 		for ( vector<Vec2f>::const_iterator it = lines.begin(); it != lines.end(); ++it )
 
 		{
-			float rho = (*it)[0];   /* First element is distance rho */
+			float rho = (*it)[0];
 
-			float theta = (*it)[1]; /* Second element is angle theta */
-
-
-			/* Filter to remove vertical and horizontal lines, */
-
-			/* and atan(0.09) equals about 5 degrees. */
+			float theta = (*it)[1];
 
 
-			/* 5-85 （右）   ||  93-175（左） */
+
+
+
+
+
+//			/* 5-85 （右）   ||  93-175（左） */
 
 			if ( (theta > 0.09 && theta < 1.48) || (theta > 1.62 && theta < 3.05) )
 
@@ -284,24 +281,13 @@ int main()
 
 				#ifdef _DEBUG
 
-				/* point of intersection of the line with first row */
-
 				Point pt1( rho / cos( theta ), 0 );
-
-
-				/* point of intersection of the line with last row */
-
 				Point pt2( (rho - result.rows * sin( theta ) ) / cos( theta ), result.rows );
 
-
-				/* Draw a line */
-
-				 #endif
-
-
 				line( result, pt1, pt2, Scalar( 0, 255, 255 ), 3, CV_AA );
-				float k = -1 / tan( theta );
+                #endif
 
+				float k = -1 / tan( theta );
 
 				if ( k > 0 )
 				{
@@ -316,7 +302,7 @@ int main()
 
 				#ifdef _DEBUG
 
-				clog<<"Line: ("<<rho<<","<<theta<<")\n"; 
+				clog<<"Line: ("<<rho<<","<<theta<<")\n";
 
 				#endif
 		}
@@ -358,9 +344,6 @@ int main()
 			linek[1] = sumRight;
 		}
 
-		/* 加在这里 */
-
-		/*  */
 
 
 		run( linek[0], linek[1] );
