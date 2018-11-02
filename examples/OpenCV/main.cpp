@@ -316,7 +316,7 @@ int main()
 
 				#ifdef _DEBUG
 
-				clog<<"Line: ("<<rho<<","<<theta<<")\n"; */
+				clog<<"Line: ("<<rho<<","<<theta<<")\n"; 
 
 				#endif
 		}
