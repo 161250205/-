@@ -6,6 +6,9 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 
+
+#include "GPIOlib.h"
+
 #define PI 3.1415926
 
 //Uncomment this line at run-time to skip GUI rendering
@@ -21,6 +24,7 @@ const string CANNY_WINDOW_NAME="Canny";
 const int CANNY_LOWER_BOUND=50;
 const int CANNY_UPPER_BOUND=250;
 const int HOUGH_THRESHOLD=150;
+
 
 int main()
 {
@@ -46,6 +50,13 @@ int main()
 		Rect roi(0,image.rows/3,image.cols,image.rows/3);
 		Mat imgROI=image(roi);
 
+		cvtColor(imgROI,grey,CV_RGB2GRAY);
+		GaussianBlur(grey,blur,Size(3,3),0);
+		medianBlur(blur,smooth,3);
+		morphologyEx(smooth, close, CV_MOP_CLOSE, element);
+		morphologyEx(close, open, CV_MOP_OPEN, element);
+		threshold(open, binary, THRESHOLD , 255, THRESH_BINARY_INV);
+
 		//Canny algorithm
 		Mat contours;
 		Canny(imgROI,contours,CANNY_LOWER_BOUND,CANNY_UPPER_BOUND);
@@ -69,6 +80,8 @@ int main()
 
 			//Filter to remove vertical and horizontal lines,
 			//and atan(0.09) equals about 5 degrees.
+
+			//5-85 （右）   ||  93-175（左）
 			if((theta>0.09&&theta<1.48)||(theta>1.62&&theta<3.05))
 			{
 				if(theta>maxRad)
@@ -86,10 +99,14 @@ int main()
 				#endif
 			}
 
+			float k = -cot(theta);
+
 			#ifdef _DEBUG
 			clog<<"Line: ("<<rho<<","<<theta<<")\n";
 			#endif
 		}
+
+		float linek[2];
 
 		#ifdef _DEBUG
 		stringstream overlayedText;
