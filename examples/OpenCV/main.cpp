@@ -31,6 +31,11 @@ const int low_speed = 15;//特殊情况下缓慢前行（比如需要转弯的�
 
 const float deviation = 0;//可以容忍的斜率差（根据实际情况定）
 const float standard = 1;//斜率标准，只有当斜率绝对值大于标准才可以与误差比较（当斜率较小的时候，误差普遍较小，没有比较性）
+
+float get_abs(float a){
+    if(a<0) return -a;
+    return a;
+}
 void init_k(int& k1,int& k2){
     k1 = 0;
     k2 = 0;
@@ -41,11 +46,6 @@ bool judge_normal(float k1,float k2,float deviation,float standard){
     else{
         return false;
     }
-}
-
-float get_abs(float a){
-    if(a<0) return -a;
-    return a;
 }
 void turnToRight(int angle){
     turnTo(angle);
@@ -66,7 +66,7 @@ void forward(int speed){
 }
 
 void special_handle(float  k1,float k2){
-    float positive_k,negativeZ_k;
+    float positive_k,negative_k;
     if(k1>0){
         positive_k = k1;
         negative_k = k2;
@@ -86,21 +86,21 @@ void simple_handle(float k1,float k2){
         positive_k = k2;
         negative_k = -k1;
     }
-    if(positive_k>negativeZ_k){
+    if(positive_k>negative_k){
         turnToRight(angle);//右转
     }else{
         turnToLeft(angle);//左转
     }
 }
 void run(float k1,float k2){
-    if(judge_normal(line1_k,line2_k,deviation,standard)){
+    if(judge_normal(k1,k2,deviation,standard)){
                 //是正常状态则快速前行
                 forward(high_speed);
        }else{
                 //特殊状态则减速前行
                 forward(low_speed);
                 //特殊情况对舵机调整进行转弯
-                simple_handle(line1_k,line2_k);
+                simple_handle(k1,k2);
     }
 }
 int main()
