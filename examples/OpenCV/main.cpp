@@ -16,6 +16,7 @@
 
 using namespace cv;
 using namespace std;
+using namespace GPIO;
 
 const string CAM_PATH="/dev/video0";
 const string MAIN_WINDOW_NAME="Processed Image";
@@ -25,9 +26,86 @@ const int CANNY_LOWER_BOUND=50;
 const int CANNY_UPPER_BOUND=250;
 const int HOUGH_THRESHOLD=150;
 
+const int high_speed = 30;//正常情况下快速直行
+const int low_speed = 15;//特殊情况下缓慢前行（比如需要转弯的时候或者线的识别出现了短暂bug)
 
+const float deviation = 0;//可以容忍的斜率差（根据实际情况定）
+const float standard = 1;//斜率标准，只有当斜率绝对值大于标准才可以与误差比较（当斜率较小的时候，误差普遍较小，没有比较性）
+void init_k(int& k1,int& k2){
+    k1 = 0;
+    k2 = 0;
+}
+bool judge_normal(float k1,float k2,float deviation,float standard){
+    if(get_abs(k1)>standard&&get_abs(k2)>standard)
+        return (get_abs(get_abs(k1)-get_abs(k2))<deviation)?true:false;
+    else{
+        return false;
+    }
+}
+
+float get_abs(float a){
+    if(a<0) return -a;
+    return a;
+}
+void turnToRight(int angle){
+    turnTo(angle);
+    delay(500);
+    turnTo(-angle);
+    delay(300);
+}
+void turnToLeft(int angle){
+
+    turnTo(-angle);
+    delay(500);
+    turnTo(angle);
+    delay(300);
+}
+void forward(int speed){
+    controlLeft(FORWARD,speed);
+    controlRight(FORWARD,speed);
+}
+
+void special_handle(float  k1,float k2){
+    float positive_k,negativeZ_k;
+    if(k1>0){
+        positive_k = k1;
+        negative_k = k2;
+    }else{
+        positive_k = k2;
+        negative_k = k1;
+    }
+}
+//简单处理，哪边斜率大就向另一边转
+void simple_handle(float k1,float k2){
+    int positive_k,negative_k;
+    int angle = 20;//旋转角度，默认20
+    if(k1>0){
+        positive_k = k1;
+        negative_k = -k2;
+    }else{
+        positive_k = k2;
+        negative_k = -k1;
+    }
+    if(positive_k>negativeZ_k){
+        turnToRight(angle);//右转
+    }else{
+        turnToLeft(angle);//左转
+    }
+}
+void run(float k1,float k2){
+    if(judge_normal(line1_k,line2_k,deviation,standard)){
+                //是正常状态则快速前行
+                forward(high_speed);
+       }else{
+                //特殊状态则减速前行
+                forward(low_speed);
+                //特殊情况对舵机调整进行转弯
+                simple_handle(line1_k,line2_k);
+    }
+}
 int main()
 {
+    init();
 	VideoCapture capture(CAM_PATH);
 	//If this fails, try to open as a video camera, through the use of an integer param
 	if (!capture.isOpened())
@@ -107,7 +185,7 @@ int main()
 		}
 
 		float linek[2];
-
+        run(linek[0],linek[1]);
 		#ifdef _DEBUG
 		stringstream overlayedText;
 		overlayedText<<"Lines: "<<lines.size();
