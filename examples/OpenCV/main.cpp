@@ -138,9 +138,9 @@ int main()
 		//Canny algorithm
 		Mat contours;
 		Canny(imgROI,contours,CANNY_LOWER_BOUND,CANNY_UPPER_BOUND);
-		#ifdef _DEBUG
+		//#ifdef _DEBUG
 		imshow(CANNY_WINDOW_NAME,contours);
-		#endif
+		//#endif
 
 		vector<Vec2f> lines;
 		HoughLines(contours,lines,1,PI/180,HOUGH_THRESHOLD);
@@ -170,14 +170,14 @@ int main()
 				if(theta<minRad)
 					minRad=theta;
 				
-				#ifdef _DEBUG
+				//#ifdef _DEBUG
 				//point of intersection of the line with first row
 				Point pt1(rho/cos(theta),0);
 				//point of intersection of the line with last row
 				Point pt2((rho-result.rows*sin(theta))/cos(theta),result.rows);
 				//Draw a line
 				line(result,pt1,pt2,Scalar(0,255,255),3,CV_AA);
-				#endif
+				//#endif
 			}
 
 			float k = -1/tan(theta);
@@ -185,12 +185,12 @@ int main()
 			if(k>0){
 				linesLeft.push_back(k);
 			} else if(k<0){
-				linesRight.push_back(k)
+				linesRight.push_back(k);
 			}
 
-			#ifdef _DEBUG
+			//#ifdef _DEBUG
 			clog<<"Line: ("<<rho<<","<<theta<<")\n";
-			#endif
+			//#endif
 		}
 
 		float linek[2] = {0};
@@ -214,7 +214,7 @@ int main()
 		}
 
 		if(linesRight.size()!=0){
-			linek[1] = sumRight/linesRight.size()
+			linek[1] = sumRight/linesRight.size();
 		} else{
 			linek[1] = sumRight;
 		}
@@ -223,12 +223,12 @@ int main()
 
 
         run(linek[0],linek[1]);
-		#ifdef _DEBUG
+		//#ifdef _DEBUG
 		stringstream overlayedText;
 		overlayedText<<"Lines: "<<lines.size();
 		putText(result,overlayedText.str(),Point(10,result.rows-10),2,0.8,Scalar(0,0,255),0);
 		imshow(MAIN_WINDOW_NAME,result);
-		#endif
+		//#endif
 
 		lines.clear();
 		waitKey(1);
