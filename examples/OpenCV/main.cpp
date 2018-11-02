@@ -66,7 +66,7 @@ void forward(int speed){
 }
 
 void special_handle(float  k1,float k2){
-    float positive_k,negativeZ_k;
+    float positive_k,negative_k;
     if(k1>0){
         positive_k = k1;
         negative_k = k2;
@@ -86,21 +86,21 @@ void simple_handle(float k1,float k2){
         positive_k = k2;
         negative_k = -k1;
     }
-    if(positive_k>negativeZ_k){
+    if(positive_k>negative_k){
         turnToRight(angle);//右转
     }else{
         turnToLeft(angle);//左转
     }
 }
 void run(float k1,float k2){
-    if(judge_normal(line1_k,line2_k,deviation,standard)){
+    if(judge_normal(k1,k2,deviation,standard)){
                 //是正常状态则快速前行
                 forward(high_speed);
        }else{
                 //特殊状态则减速前行
                 forward(low_speed);
                 //特殊情况对舵机调整进行转弯
-                simple_handle(line1_k,line2_k);
+                simple_handle(k1,k2);
     }
 }
 int main()
