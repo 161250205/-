@@ -76,6 +76,9 @@ int main()
     while(true){
         //初始化k1，k2
         init_k(line1_k,line2_k);
+        //默认为0，根据伟哥传过来的值进行修改
+        line1_k = 0;
+        line2_k = 0;
         //根据两条线的参数判断是否是正常状态
         if(judge_normal(line1_k,line2_k,deviation,standard)){
             //是正常状态则快速前行
