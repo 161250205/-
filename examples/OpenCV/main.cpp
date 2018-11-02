@@ -250,6 +250,8 @@ int main()
 //		vector<float> linesLeft;
 //
 //		vector<float> linesRight;
+		float lineLeft = 0;
+		float lineRight = 0;
 
 
 		for ( vector<Vec2f>::const_iterator it = lines.begin(); it != lines.end(); ++it )
@@ -287,15 +289,13 @@ int main()
 				line( result, pt1, pt2, Scalar( 0, 255, 255 ), 3, CV_AA );
                 #endif
 
-//				float k = -1 / tan( theta );
+				float k = -1 / tan( theta );
 //
-//				if ( k > 0 )
-//				{
-//					linesLeft.push_back( k );
-//				} else if ( k < 0 )
-//				{
-//					linesRight.push_back( k );
-//				}
+				if ( k > 0 ) {
+					lineLeft = k;
+				} else if ( k < 0 ) {
+					lineRight = k;
+				}
 			}
 
 
@@ -308,7 +308,6 @@ int main()
 		}
 
 
-		float linek[2] = { 0 };
 
 
 //		float sumLefft = 0;
@@ -346,7 +345,7 @@ int main()
 
 
 
-		run( 0, 0 );
+		run( lineLeft, lineRight );
 
 		#ifdef _DEBUG
 
