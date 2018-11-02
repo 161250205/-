@@ -180,7 +180,7 @@ int main()
 				#endif
 			}
 
-			float k = -cot(theta);
+			float k = -1/tan(theta);
 
 			if(k>0){
 				linesLeft.push_back(k);
