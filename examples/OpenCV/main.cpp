@@ -219,30 +219,17 @@ int main()
 		Mat imgROI = image( roi );
 
 
-/*		cvtColor(imgROI,grey,CV_RGB2GRAY); */
-
-/*		GaussianBlur(grey,blur,Size(3,3),0); */
-
-/*		medianBlur(blur,smooth,3); */
-
-/*		morphologyEx(smooth, close, CV_MOP_CLOSE, element); */
-
-/*		morphologyEx(close, open, CV_MOP_OPEN, element); */
-
-/*		threshold(open, binary, THRESHOLD , 255, THRESH_BINARY_INV); */
-
-
 		/* Canny algorithm */
 
 		Mat contours;
 
 		Canny( imgROI, contours, CANNY_LOWER_BOUND, CANNY_UPPER_BOUND );
 
-/* #ifdef _DEBUG */
+		#ifdef _DEBUG
 
 		imshow( CANNY_WINDOW_NAME, contours );
 
-/* #endif */
+		#endif
 
 
 		vector<Vec2f> lines;
@@ -295,7 +282,7 @@ int main()
 					minRad = theta;
 
 
-/* #ifdef _DEBUG */
+				#ifdef _DEBUG
 
 				/* point of intersection of the line with first row */
 
@@ -309,6 +296,9 @@ int main()
 
 				/* Draw a line */
 
+				 #endif
+
+
 				line( result, pt1, pt2, Scalar( 0, 255, 255 ), 3, CV_AA );
 				float k = -1 / tan( theta );
 
@@ -320,17 +310,15 @@ int main()
 				{
 					linesRight.push_back( k );
 				}
-
-/* #endif */
 			}
 
 
 
-/* #ifdef _DEBUG */
+				#ifdef _DEBUG
 
-/*			clog<<"Line: ("<<rho<<","<<theta<<")\n"; */
+				clog<<"Line: ("<<rho<<","<<theta<<")\n"; */
 
-/* #endif */
+				#endif
 		}
 
 
@@ -377,7 +365,7 @@ int main()
 
 		run( linek[0], linek[1] );
 
-/* #ifdef _DEBUG */
+		#ifdef _DEBUG
 
 		stringstream overlayedText;
 
@@ -387,7 +375,7 @@ int main()
 
 		imshow( MAIN_WINDOW_NAME, result );
 
-/* #endif */
+		#endif
 
 
 		lines.clear();
