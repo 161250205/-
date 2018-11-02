@@ -31,6 +31,11 @@ const int low_speed = 15;//特殊情况下缓慢前行（比如需要转弯的�
 
 const float deviation = 0;//可以容忍的斜率差（根据实际情况定）
 const float standard = 1;//斜率标准，只有当斜率绝对值大于标准才可以与误差比较（当斜率较小的时候，误差普遍较小，没有比较性）
+
+float get_abs(float a){
+    if(a<0) return -a;
+    return a;
+}
 void init_k(int& k1,int& k2){
     k1 = 0;
     k2 = 0;
@@ -41,11 +46,6 @@ bool judge_normal(float k1,float k2,float deviation,float standard){
     else{
         return false;
     }
-}
-
-float get_abs(float a){
-    if(a<0) return -a;
-    return a;
 }
 void turnToRight(int angle){
     turnTo(angle);
