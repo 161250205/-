@@ -106,6 +106,8 @@ int main()
 			#endif
 		}
 
+		//加在这里
+		//
 		float linek[2];
 
 		#ifdef _DEBUG
