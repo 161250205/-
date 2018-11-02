@@ -44,9 +44,9 @@ const int CANNY_UPPER_BOUND = 250;
 const int HOUGH_THRESHOLD = 150;
 
 
-const int high_speed = 30;
+const int high_speed = 8;
 
-const int low_speed = 15;
+const int low_speed = 8;
 
 
 const float deviation = 0;
@@ -250,8 +250,8 @@ int main()
 //		vector<float> linesLeft;
 //
 //		vector<float> linesRight;
-		float lineLeft = 0;
-		float lineRight = 0;
+//		float lineLeft = 0;
+//		float lineRight = 0;
 
 
 		for ( vector<Vec2f>::const_iterator it = lines.begin(); it != lines.end(); ++it )
@@ -289,13 +289,13 @@ int main()
 				line( result, pt1, pt2, Scalar( 0, 255, 255 ), 3, CV_AA );
                 #endif
 
-				float k = -1 / tan( theta );
-//
-				if ( k > 0 ) {
-					lineLeft = k;
-				} else if ( k < 0 ) {
-					lineRight = k;
-				}
+//				float k = -1 / tan( theta );
+////
+//				if ( k > 0 ) {
+//					lineLeft = k;
+//				} else if ( k < 0 ) {
+//					lineRight = k;
+//				}
 			}
 
 
@@ -345,7 +345,7 @@ int main()
 
 
 
-		run( lineLeft, lineRight );
+		run( 0, 0 );
 
 		#ifdef _DEBUG
 
