@@ -235,11 +235,15 @@ int main()
 
 
 
-//		vector<float> linesLeft;
-//
-//		vector<float> linesRight;
-		float lineLeft = 0;
-		float lineRight = 0;
+		vector<float> linesLeft;
+		vector<float> bLeft;
+		vector<float> xlLeft;
+
+		vector<float> linesRight;
+		vector<float> bRight;
+		vector<float> xlRight;
+//		float lineLeft = 0;
+//		float lineRight = 0;
 
 
 		for ( vector<Vec2f>::const_iterator it = lines.begin(); it != lines.end(); ++it )
@@ -277,12 +281,19 @@ int main()
 				line( result, pt1, pt2, Scalar( 0, 255, 255 ), 3, CV_AA );
                 #endif
 
-				float k = -1 / tan( theta );
+				float k = -1 * (cos(theta)/sin(theta));
+				float b = rho / sin(theta);
+				float xl = rho / cos(theta);
 //
 				if ( k > 0 ) {
-					lineLeft = k;
+
+                    linesLeft.push_back(k);
+                    bLeft.push_back(b);
+                    xlLeft.push_back(xl);
 				} else if ( k < 0 ) {
-					lineRight = k;
+					linesRight.push_back(k);
+					bRight.push_back(b);
+					xlRight.push_back(xl);
 				}
 			}
 
@@ -295,41 +306,54 @@ int main()
 				#endif
 		}
 
+		float kLeft = 0;
+		float kRight = 0;
+
+		if(xlLeft.size()!=0){
+
+            int countNumLeft = 0;
+            float minXl = get_abs(xlLeft[0]);
+            for(int i = 0;i<xlLeft.size();i++){
+
+                cout<<"ll:"<<xlLeft[i]<<endl;
+                if(get_abs(xlLeft[i])<minXl){
+                    minXl = get_abs(xlLeft[i]);
+                    countNumLeft = i;
+                }
+            }
+            kLeft = linesLeft[countNumLeft];
+
+		}
+//        if(xlLeft.size()!=0){
+//
+//            int countNumLeft = 0;
+//            float maxXl = get_abs(xlLeft[0]);
+//            for(int i = 0;i<xlLeft.size();i++){
+//                if(get_abs(xlLeft[i])>maxXl){
+//                    maxXl = get_abs(xlLeft[i]);
+//                    countNumLeft = i;
+//                }
+//            }
+//            kLeft = linesLeft[countNumLeft];
+//
+//        }
 
 
+		if(xlRight.size()!=0){
+		    int countNumRight = 0;
+		    float minXl2 = get_abs(xlRight[0]);
+		    for(int i = 0;i<xlRight.size();i++){
+		        if(get_abs(xlRight[i])<minXl2){
+		            minXl2 = get_abs(xlRight[i]);
+		            countNumRight = i;
+		        }
+		    }
 
-//		float sumLefft = 0;
-//
-//		float sumRight = 0;
-//
-//		for ( int i = 0; i < linesLeft.size(); ++i )
-//
-//		{
-//			sumLefft += linesLeft[i];
-//		}
-//
-//
-//		for ( int i = 0; i < linesRight.size(); ++i )
-//
-//		{
-//			sumRight += linesRight[i];
-//		}
-//
-//
-//		if ( linesLeft.size() != 0 )
-//		{
-//			linek[0] = sumLefft / linesLeft.size();
-//		} else{
-//			linek[0] = sumLefft;
-//		}
-//
-//
-//		if ( linesRight.size() != 0 )
-//		{
-//			linek[1] = sumRight / linesRight.size();
-//		} else{
-//			linek[1] = sumRight;
-//		}
+		    kRight = linesRight[countNumRight];
+		}
+
+
+//          kLeft和kRight  分别是左右两条线的斜率  如果没识别到 就是0    取x轴交点距离原点最近的那条线
 
 
         int lines = 1;
@@ -352,7 +376,7 @@ int main()
 
 		stringstream overlayedText;
 
-		overlayedText << "Lines: " << lines.size();
+		overlayedText << "Lines: " << lines.size()<< " kl"<<kLeft<<" kR"<<kRight;
 
 		putText( result, overlayedText.str(), Point( 10, result.rows - 10 ), 2, 0.8, Scalar( 0, 0, 255 ), 0 );
 
@@ -362,6 +386,14 @@ int main()
 
 
 		lines.clear();
+
+		linesLeft.clear();
+		bLeft.clear();
+		xlLeft.clear();
+		linesRight.clear();
+        bRight.clear();
+        xlRight.clear();
+
 
 		waitKey( 1 );
 	}
