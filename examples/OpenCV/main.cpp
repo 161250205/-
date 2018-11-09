@@ -61,12 +61,12 @@ float get_abs( float a )
 	return(a);
 }
 
-bool judge_normal( float k1, float k2, float deviation, float standard )
+bool judge_normal(int lines)
 {
-	if ( get_abs( k1 ) > standard && get_abs( k2 ) > standard )
-		return ( (get_abs( get_abs( k1 ) - get_abs( k2 ) ) < deviation) ? true : false);
+	if ( lines>1 )
+		return true;
 	else{
-		return(false);
+		return false;
 	}
 }
 
@@ -140,7 +140,7 @@ void simple_handle( float k1, float k2 )
 
 void run( float k1, float k2 )
 {
-	if ( judge_normal( k1, k2, deviation, standard ) )
+	if ( judge_normal( 1 ) )
 	{
 
 
@@ -332,8 +332,21 @@ int main()
 //		}
 
 
+        int lines = 1;
 
-		run( lineLeft, lineRight );
+        if ( judge_normal( lines ) )
+        {
+
+
+            forward( high_speed );
+        }else{
+
+
+            forward( low_speed );
+
+
+            simple_handle( k1, k2 );
+        }
 
 		#ifdef _DEBUG
 
